@@ -11,9 +11,13 @@
       font-family: tempu;
       src: url(TempuratureVF.ttf);
     }
+  
+  body{
+    font-family: helvetica !important;
+  }
     .page {
     padding: 2rem 1.5rem 3rem;
-    font-family: helvetica !important;
+  
     -webkit-font-smoothing: antialiased;
   }
 
@@ -229,6 +233,44 @@
   .text-input-field:focus {
     border-color: var(--color-border-primary);
   }
+
+  @media only screen and (max-width: 600px) {
+    .headline {
+    font-size: calc(100vw / .7) !important;
+  
+  }
+  .axis-bar {
+    position: fixed;
+    width: calc(100% - 20px);
+    bottom: 10px;
+    left: 10px;
+    background-color: rgb(233, 233, 233);
+    padding: 1.25rem 1.5rem;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    z-index: 10;
+  }
+
+  .headline-wrap {
+    width: 100vw;
+    height: 80vh;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    
+    background-color: #04AA6D;
+    display: flex;
+    z-index: -9;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+}
+
   </style>
 </head>
 <body>
@@ -239,7 +281,7 @@
       <span id="location-label">—</span>
     </div>
     <span class="temp-display" id="meta-temp">—</span>
-    <span style="font-size:12px;color:#aaa;">wght <span id="wght-value">—</span></span>
+   Current <span>wght <span id="wght-value">—</span></span>
   </div>
 
   <div class="headline-wrap" id="headline-wrap">
@@ -259,13 +301,10 @@
       <input type="range" id="temp-slider" min="0" max="40" step="1" value="12">
       <span class="temp-display" id="slider-temp-display">12°C</span>
     </div>
-
+<br>
     <p class="desc">Outside, the air sits at <strong id="temp-inline">12°C</strong>. That temperature is mapped directly to this font's weight axis — cold air makes letters lean thin, warmth rounds them into weight.</p>
 
-    <div class="text-input-row">
-      <span class="text-input-label">Your text</span>
-      <input class="text-input-field" id="custom-input" type="text" placeholder="Type something…" maxlength="80" />
-    </div>
+   
 
     <div class="custom-wrap" id="custom-wrap">
       <span class="custom-display" id="custom-display" style="opacity:0; font-size:1rem;"></span>

@@ -198,12 +198,12 @@
     }
 
     .slider-label { font-size: 12px; color: #666; white-space: nowrap; }
-    .temp-display { font-size: 14px; font-weight: 500; color: #111; min-width: 46px; text-align: right; }
+    .temp-display { font-size: 14px; font-weight: 500; color: #000; min-width: 46px; text-align: right; }
 
     .desc {
       margin-top: 0.65rem;
       font-size: 12px;
-      color: #888;
+      color: #000;
       line-height: 1.5;
     }
 
@@ -233,7 +233,7 @@
       border: 0.5px solid rgba(0,0,0,0.15);
       border-radius: 6px;
       background: rgba(255,255,255,0.6);
-      color: #111;
+      color: #000;
       outline: none;
       transition: font-variation-settings 0.8s ease, border-color 0.2s;
     }
@@ -252,7 +252,7 @@
       white-space: nowrap;
       display: block;
       line-height: 1.1;
-      color: #111;
+      color: #000;
       letter-spacing: -0.02em;
       transition: font-variation-settings 0.8s ease;
     }
@@ -314,10 +314,10 @@
 
   <div class="axis-bar">
     <div class="axis-label">Temperature OTF</div>
-    <div class="status-msg" id="status-msg">Use your live temperature or drag the slider.</div>
+    <div class="status-msg" id="status-msg"></div>
 
     <button class="locate-btn" id="locate-btn" onclick="requestLocation()">
-      ◎ Use my location
+      Use my location
     </button>
 
     <div class="axis-track">
@@ -331,7 +331,7 @@
       <span class="temp-display" id="slider-temp-display2">12°C</span>
     </div>
 
-    <p class="desc">Outside, the air sits at <strong id="temp-inline">—</strong>. That temperature is mapped directly to this font's weight axis — cold air makes letters lean thin, warmth rounds them into weight.</p>
+    <p class="desc">Outside, the air sits at <strong id="temp-inline">—</strong>. </p>
 
     <div class="text-input-row">
       <span class="text-input-label">Your text</span>

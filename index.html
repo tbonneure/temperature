@@ -11,170 +11,224 @@
       font-family: tempu;
       src: url(TempuratureVF.ttf);
     }
+    .page {
+    padding: 2rem 1.5rem 3rem;
+    font-family: executive;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    body {
-      -webkit-font-smoothing: antialiased;
-    }
+  .none { display: none; }
 
-    .none { display: none; }
+  .meta {
+    font-size: 13px;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    z-index: 10;
+  }
 
-    .meta {
-      font-size: 13px;
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      color: #666;
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      z-index: 10;
-    }
+  .weather-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 0.5px solid var(--color-border-tertiary);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    background: var(--color-background-secondary);
+  }
 
-    .weather-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 99px;
-      border: 0.5px solid rgba(0,0,0,0.15);
-      font-size: 12px;
-      color: #666;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(4px);
-    }
+  .temp-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #378ADD;
+    transition: background 0.8s ease;
+  }
 
-    .temp-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #378ADD;
-      transition: background 0.8s ease;
-    }
+  .headline-wrap {
+    width: 100vw;
+    height: 100vh;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    background: var(--color-background-secondary);
+    display: flex;
+    z-index: -9;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .headline-wrap {
-      width: 100vw;
-      height: 100vh;
-      left: 0;
-      top: 0;
-      overflow: hidden;
-      position: fixed;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: -1;
-    }
+  .headline {
+    font-family: 'tempu', serif;
+    white-space: nowrap;
+    display: block;
+    line-height: 1;
+    font-size: calc(100vw / 2) !important;
+    text-align: center;
+    width: 100vw;
+    transform: translateY(30px);
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    transition: font-variation-settings 0.8s ease;
+  }
 
-    .headline {
-      font-family: 'tempu', serif;
-      white-space: nowrap;
-      display: block;
-      line-height: 1;
-      text-align: center;
-      width: 100vw;
-      transform: translateY(30px);
-      color: #111;
-      letter-spacing: -0.02em;
-      transition: font-variation-settings 0.8s ease;
-    }
+  .body-text {
+    font-family: 'courier', serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    max-width: 540px;
+    transition: font-variation-settings 0.8s ease;
+  }
 
-    .axis-bar {
-      position: fixed;
-      width: 500px;
-      max-width: calc(100vw - 20px);
-      bottom: 10px;
-      left: 10px;
-      background-color: beige;
-      padding: 1.25rem 1.5rem;
-      border: 0.5px solid rgba(0,0,0,0.12);
-      border-radius: 12px;
-      z-index: 10;
-    }
+  .axis-bar {
+    position: fixed;
+    width: 500px;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgb(233, 233, 233);
+    padding: 1.25rem 1.5rem;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    z-index: 10;
+  }
 
-    .axis-label {
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #999;
-      margin-bottom: 0.5rem;
-    }
+  .axis-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 0.75rem;
+  }
 
-    .status-msg {
-      font-size: 11px;
-      color: #aaa;
-      min-height: 16px;
-      margin-bottom: 0.75rem;
-    }
+  .axis-track {
+    position: relative;
+    height: 4px;
+    background: var(--color-border-tertiary);
+    border-radius: 2px;
+    margin-bottom: 0.5rem;
+    display: none;
+  }
 
-    .slider-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 0.5px solid rgba(0,0,0,0.1);
-    }
+  .axis-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: #378ADD;
+    transition: width 0.8s ease, background 0.8s ease;
+  }
 
-    .slider-label { font-size: 12px; color: #666; white-space: nowrap; }
-    #temp-slider { flex: 1; }
-    .temp-display { font-size: 14px; font-weight: 500; color: #111; min-width: 50px; text-align: right; }
+  .axis-thumb {
+    position: absolute;
+    top: 50%;
+    display: none;
+    transform: translate(-50%, -50%);
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: black;
+    border: 2px solid var(--color-background-primary);
+    transition: left 0.8s ease, background 0.8s ease;
+  }
 
-    .desc {
-      margin-top: 0.75rem;
-      font-size: 12px;
-      color: #888;
-      line-height: 1.5;
-    }
+  #temp-slider{
+    -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 3px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+  }
 
-    .text-input-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
-      border-top: 0.5px solid rgba(0,0,0,0.1);
-    }
+  .slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #04AA6D; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
 
-    .text-input-label {
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #aaa;
-      white-space: nowrap;
-    }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+  }
 
-    .text-input-field {
-      flex: 1;
-      font-family: 'tempu', serif;
-      font-size: 14px;
-      padding: 6px 10px;
-      border: 0.5px solid rgba(0,0,0,0.2);
-      border-radius: 6px;
-      background: rgba(255,255,255,0.6);
-      color: #111;
-      outline: none;
-      transition: font-variation-settings 0.8s ease, border-color 0.2s;
-    }
+  .slider-label { font-size: 12px; color: var(--color-text-secondary); white-space: nowrap; }
+  #temp-slider { flex: 1; }
+  .temp-display { font-size: 14px; font-weight: 500; color: var(--color-text-primary); min-width: 50px; text-align: right; }
+  .axis-info { margin-top: 0.75rem; font-size: 12px; color: var(--color-text-tertiary); }
+  .axis-info span { color: var(--color-text-primary); font-weight: 500; }
 
-    .text-input-field:focus {
-      border-color: rgba(0,0,0,0.4);
-    }
+  .status-msg {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 0.5rem;
+    min-height: 16px;
+  }
 
-    .custom-wrap {
-      width: 100%;
-      overflow: hidden;
-      line-height: 1;
-      min-height: 1rem;
-      margin-top: 0.5rem;
-    }
+  .custom-wrap {
+    width: 100%;
+    overflow: hidden;
+    line-height: 1;
+  }
 
-    .custom-display {
-      font-family: 'tempu', serif;
-      white-space: nowrap;
-      display: block;
-      line-height: 1.1;
-      color: #111;
-      letter-spacing: -0.02em;
-      transition: font-variation-settings 0.8s ease;
-    }
+  .custom-display {
+    font-family: 'tempu', serif;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.1;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    transition: font-variation-settings 0.8s ease;
+  }
+
+  .text-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .text-input-label {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+    display: hide;
+  }
+
+  .text-input-field {
+    flex: 1;
+    display: none;
+    font-family: 'tempu', serif;
+    font-size: 14px;
+    padding: 6px 10px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: transparent;
+    color: var(--color-text-primary);
+    outline: none;
+    transition: font-variation-settings 0.8s ease, border-color 0.2s;
+  }
+
+  .text-input-field:focus {
+    border-color: var(--color-border-primary);
+  }
   </style>
 </head>
 <body>
@@ -182,7 +236,7 @@
   <div class="meta">
     <div class="weather-pill">
       <div class="temp-dot" id="temp-dot"></div>
-      <span id="location-label">Locating…</span>
+      <span id="location-label">—</span>
     </div>
     <span class="temp-display" id="meta-temp">—</span>
     <span style="font-size:12px;color:#aaa;">wght <span id="wght-value">—</span></span>
@@ -194,15 +248,19 @@
 
   <div class="axis-bar">
     <div class="axis-label">Temperature OTF</div>
-    <div class="status-msg" id="status-msg">Requesting location…</div>
+    <div class="status-msg" id="status-msg">Use your live temperature or drag the slider.</div>
+
+    <button class="locate-btn" id="locate-btn" onclick="requestLocation()">
+      ◎ Use my location
+    </button>
 
     <div class="slider-row">
-      <span class="slider-label">Override temperature</span>
+      <span class="slider-label">Manual temperature</span>
       <input type="range" id="temp-slider" min="0" max="40" step="1" value="12">
       <span class="temp-display" id="slider-temp-display">12°C</span>
     </div>
 
-    <p class="desc">Outside, the air sits at <strong id="temp-inline">—</strong>. That temperature is mapped directly to this font's weight axis — cold air makes letters lean thin, warmth rounds them into weight.</p>
+    <p class="desc">Outside, the air sits at <strong id="temp-inline">12°C</strong>. That temperature is mapped directly to this font's weight axis — cold air makes letters lean thin, warmth rounds them into weight.</p>
 
     <div class="text-input-row">
       <span class="text-input-label">Your text</span>
@@ -241,22 +299,21 @@
       el.style.fontSize = '100px';
       const availW = wrap.clientWidth;
       if (!availW || !el.textContent.trim()) return;
-      const naturalW = el.scrollWidth;
-      el.style.fontSize = Math.floor(100 * (availW / naturalW)) + 'px';
+      el.style.fontSize = Math.floor(100 * (availW / el.scrollWidth)) + 'px';
     }
 
     function applyTemp(t) {
       const wght  = tempToWeight(t);
       const color = tempToColor(t);
       currentWeight = wght;
-
       const fvs = `'wght' ${wght}`;
-      document.getElementById('temp-dot').style.background         = color;
-      document.getElementById('wght-value').textContent            = wght;
-      document.getElementById('meta-temp').textContent             = t.toFixed(1) + '°C';
-      document.getElementById('slider-temp-display').textContent   = t.toFixed(1) + '°C';
-      document.getElementById('temp-inline').textContent           = t.toFixed(1) + '°C';
-      document.getElementById('temp-slider').value                 = Math.round(t);
+
+      document.getElementById('temp-dot').style.background       = color;
+      document.getElementById('wght-value').textContent          = wght;
+      document.getElementById('meta-temp').textContent           = t.toFixed(1) + '°C';
+      document.getElementById('slider-temp-display').textContent = t.toFixed(1) + '°C';
+      document.getElementById('temp-inline').textContent         = t.toFixed(1) + '°C';
+      document.getElementById('temp-slider').value               = Math.round(t);
       document.getElementById('custom-input').style.fontVariationSettings = fvs;
 
       fitEl('headline-wrap', 'headline', wght);
@@ -273,14 +330,12 @@
     }
 
     async function fetchWeather(lat, lon) {
-      const url  = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-      const res  = await fetch(url);
+      const res  = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
       const data = await res.json();
       return data.current_weather.temperature;
     }
 
     async function reverseGeocode(lat, lon) {
-      // try Nominatim first
       try {
         const res  = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
         const data = await res.json();
@@ -288,28 +343,32 @@
         const cc   = data.address.country_code ? data.address.country_code.toUpperCase() : '';
         if (city) return `${city}, ${cc}`;
       } catch (_) {}
-      // fallback: ip-api for city name (doesn't need coords)
       try {
         const res  = await fetch('https://ip-api.com/json/');
         const data = await res.json();
         if (data.city) return `${data.city}, ${data.countryCode}`;
       } catch (_) {}
-      // last resort: raw coords
       return `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
     }
 
-    async function initLocation() {
+    async function requestLocation() {
+      const btn = document.getElementById('locate-btn');
+      btn.disabled = true;
+      btn.textContent = '◎ Locating…';
+
       if (!navigator.geolocation) {
-        setStatus('Geolocation not supported — drag slider to set temperature.');
-        document.getElementById('location-label').textContent = 'Unknown location';
-        applyTemp(12);
+        setStatus('Geolocation not supported by this browser.');
+        btn.disabled = false;
+        btn.textContent = '◎ Use my location';
         return;
       }
+
+      setStatus('Waiting for location permission…');
 
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           const { latitude: lat, longitude: lon } = pos.coords;
-          setStatus('Fetching temperature…');
+          setStatus('Got location. Fetching temperature…');
           try {
             const [temp, place] = await Promise.all([
               fetchWeather(lat, lon),
@@ -317,24 +376,25 @@
             ]);
             document.getElementById('location-label').textContent = place;
             setStatus('Live · Open-Meteo');
+            btn.textContent = '◎ ' + place;
             applyTemp(temp);
           } catch (e) {
-            setStatus('Weather fetch failed — drag slider to set temperature.');
-            document.getElementById('location-label').textContent = 'Unknown location';
-            applyTemp(12);
+            setStatus('Could not fetch weather. Try the slider.');
+            btn.disabled = false;
+            btn.textContent = '◎ Try again';
           }
         },
         (err) => {
           const msgs = {
-            1: 'Location denied — drag slider to set temperature.',
-            2: 'Location unavailable — drag slider to set temperature.',
-            3: 'Location timed out — drag slider to set temperature.',
+            1: 'Location permission denied. Allow it in your browser settings and try again.',
+            2: 'Location unavailable. Try the slider.',
+            3: 'Location request timed out. Try again.',
           };
-          setStatus(msgs[err.code] || 'Location error.');
-          document.getElementById('location-label').textContent = 'Unknown location';
-          applyTemp(12);
+          setStatus(msgs[err.code] || 'Location error. Try the slider.');
+          btn.disabled = false;
+          btn.textContent = '◎ Try again';
         },
-        { timeout: 10000 }
+        { timeout: 10000, maximumAge: 60000 }
       );
     }
 
@@ -361,7 +421,7 @@
     });
     ro.observe(document.getElementById('headline-wrap'));
 
-    document.fonts.ready.then(() => initLocation());
+    document.fonts.ready.then(() => applyTemp(12));
   </script>
 
 </body>

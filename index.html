@@ -2,275 +2,259 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Temperature OTF</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100..900&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     @font-face {
       font-family: tempu;
       src: url(TempuratureVF.ttf);
     }
-  
-  body{
-    font-family: helvetica !important;
-  }
-    .page {
-    padding: 2rem 1.5rem 3rem;
-  
-    -webkit-font-smoothing: antialiased;
-  }
 
-  .none { display: none; }
+    html, body {
+      height: 100%;
+      font-family: helvetica;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
 
-  .meta {
-    font-size: 13px;
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 2rem;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    z-index: 10;
-  }
+    .none { display: none; }
 
-  .weather-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    border-radius: 99px;
-    border: 0.5px solid var(--color-border-tertiary);
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    background: var(--color-background-secondary);
-  }
+    .meta {
+      font-size: 13px;
+      position: fixed;
+      top: max(1rem, env(safe-area-inset-top));
+      left: 1rem;
+      color: #666;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      z-index: 10;
+    }
 
-  .temp-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #378ADD;
-    transition: background 0.8s ease;
-  }
+    .weather-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      border: 0.5px solid rgba(0,0,0,0.15);
+      font-size: 12px;
+      color: #666;
+      background: rgba(233,233,233,0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
 
-  .headline-wrap {
-    width: 100vw;
-    height: 100vh;
-    left: 0px;
-    top: 0px;
-    overflow: hidden;
-    line-height: 1;
-    margin-bottom: 1.5rem;
-    background: var(--color-background-secondary);
-    display: flex;
-    z-index: -9;
-    position: fixed;
-    justify-content: center;
-    align-items: center;
-  }
+    .temp-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #378ADD;
+      transition: background 0.8s ease;
+      flex-shrink: 0;
+    }
 
-  .headline {
-    font-family: 'tempu', serif;
-    white-space: nowrap;
-    display: block;
-    line-height: 1;
-    font-size: calc(100vw / 2) !important;
-    text-align: center;
-    width: 100vw;
-    transform: translateY(30px);
-    color: var(--color-text-primary);
-    letter-spacing: -0.02em;
-    transition: font-variation-settings 0.8s ease;
-  }
+    .headline-wrap {
+      width: 100vw;
+      height: 100dvh;
+      left: 0; top: 0;
+      overflow: hidden;
+      line-height: 1;
+      background: rgb(233, 233, 233);
+      display: flex;
+      z-index: -9;
+      position: fixed;
+      justify-content: center;
+      align-items: center;
+    }
 
-  .body-text {
-    font-family: 'courier', serif;
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    line-height: 1.65;
-    color: var(--color-text-secondary);
-    max-width: 540px;
-    transition: font-variation-settings 0.8s ease;
-  }
-
-  .axis-bar {
-    position: fixed;
-    width: 500px;
-    bottom: 10px;
-    left: 10px;
-    background-color: rgb(233, 233, 233);
-    padding: 1.25rem 1.5rem;
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    z-index: 10;
-  }
-
-  .axis-label {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-tertiary);
-    margin-bottom: 0.75rem;
-  }
-
-  .axis-track {
-    position: relative;
-    height: 4px;
-    background: var(--color-border-tertiary);
-    border-radius: 2px;
-    margin-bottom: 0.5rem;
-    display: none;
-  }
-
-  .axis-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: #378ADD;
-    transition: width 0.8s ease, background 0.8s ease;
-  }
-
-  .axis-thumb {
-    position: absolute;
-    top: 50%;
-    display: none;
-    transform: translate(-50%, -50%);
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: black;
-    border: 2px solid var(--color-background-primary);
-    transition: left 0.8s ease, background 0.8s ease;
-  }
-
-  #temp-slider{
-    -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  width: 100%; /* Full-width */
-  height: 3px; /* Specified height */
-  background: #d3d3d3; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-  }
-
-  .slider::-moz-range-thumb {
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #04AA6D; /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
-  .slider-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 1.25rem;
-    padding-top: 1rem;
-  }
-
-  .slider-label { font-size: 12px; color: var(--color-text-secondary); white-space: nowrap; }
-  #temp-slider { flex: 1; }
-  .temp-display { font-size: 14px; font-weight: 500; color: var(--color-text-primary); min-width: 50px; text-align: right; }
-  .axis-info { margin-top: 0.75rem; font-size: 12px; color: var(--color-text-tertiary); }
-  .axis-info span { color: var(--color-text-primary); font-weight: 500; }
-
-  .status-msg {
-    font-size: 11px;
-    color: var(--color-text-tertiary);
-    margin-bottom: 0.5rem;
-    min-height: 16px;
-  }
-
-  .custom-wrap {
-    width: 100%;
-    overflow: hidden;
-    line-height: 1;
-  }
-
-  .custom-display {
-    font-family: 'tempu', serif;
-    white-space: nowrap;
-    display: block;
-    line-height: 1.1;
-    color: var(--color-text-primary);
-    letter-spacing: -0.02em;
-    transition: font-variation-settings 0.8s ease;
-  }
-
-  .text-input-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 0.5px solid var(--color-border-tertiary);
-  }
-
-  .text-input-label {
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-text-tertiary);
-    white-space: nowrap;
-    display: hide;
-  }
-
-  .text-input-field {
-    flex: 1;
-    display: none;
-    font-family: 'tempu', serif;
-    font-size: 14px;
-    padding: 6px 10px;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-md);
-    background: transparent;
-    color: var(--color-text-primary);
-    outline: none;
-    transition: font-variation-settings 0.8s ease, border-color 0.2s;
-  }
-
-  .text-input-field:focus {
-    border-color: var(--color-border-primary);
-  }
-
-  @media only screen and (max-width: 600px) {
     .headline {
-    font-size: calc(100vw / .7) !important;
-  
-  }
-  .axis-bar {
-    position: fixed;
-    width: calc(100% - 20px);
-    bottom: 10px;
-    left: 10px;
-    background-color: rgb(233, 233, 233);
-    padding: 1.25rem 1.5rem;
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    z-index: 10;
-  }
+      font-family: 'tempu', serif;
+      white-space: nowrap;
+      display: block;
+      line-height: 1;
+      text-align: center;
+      width: 100vw;
+      transform: translateY(30px);
+      color: #111;
+      letter-spacing: -0.02em;
+      transition: font-variation-settings 0.8s ease;
+    }
 
-  .headline-wrap {
-    width: 100vw;
-    height: 80vh;
-    left: 0px;
-    top: 0px;
-    overflow: hidden;
-    line-height: 1;
-    margin-bottom: 1.5rem;
-    
-    background-color: #04AA6D;
-    display: flex;
-    z-index: -9;
-    position: fixed;
-    justify-content: center;
-    align-items: center;
-  }
+    .axis-bar {
+      position: fixed;
+      width: calc(100vw - 20px);
+      max-width: 500px;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      left: 10px;
+      background-color: rgb(233, 233, 233);
+      padding: 1rem 1.25rem;
+      border: 0.5px solid rgba(0,0,0,0.1);
+      border-radius: 16px;
+      z-index: 10;
+    }
 
+    .axis-label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 0.4rem;
+    }
 
-}
+    .status-msg {
+      font-size: 11px;
+      color: #aaa;
+      min-height: 15px;
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
 
+    .locate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      font-size: 12px;
+      color: #333;
+      background: white;
+      border: 0.5px solid rgba(0,0,0,0.18);
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 0.85rem;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .locate-btn:active { background: #f0f0f0; }
+    .locate-btn:disabled { opacity: 0.5; }
+
+    .axis-track {
+      position: relative;
+      height: 4px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 2px;
+      margin-bottom: 0.5rem;
+      display: none;
+    }
+
+    .axis-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: #378ADD;
+      transition: width 0.8s ease, background 0.8s ease;
+    }
+
+    .axis-thumb {
+      position: absolute;
+      top: 50%;
+      display: none;
+      transform: translate(-50%, -50%);
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: black;
+      border: 2px solid white;
+      transition: left 0.8s ease, background 0.8s ease;
+    }
+
+    #temp-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 3px;
+      background: #d3d3d3;
+      outline: none;
+      border-radius: 2px;
+      opacity: 0.7;
+    }
+
+    #temp-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #333;
+      cursor: pointer;
+    }
+
+    #temp-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #333;
+      cursor: pointer;
+      border: none;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 0.85rem;
+      border-top: 0.5px solid rgba(0,0,0,0.1);
+    }
+
+    .slider-label { font-size: 12px; color: #666; white-space: nowrap; }
+    .temp-display { font-size: 14px; font-weight: 500; color: #111; min-width: 46px; text-align: right; }
+
+    .desc {
+      margin-top: 0.65rem;
+      font-size: 12px;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    .text-input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 0.65rem;
+      padding-top: 0.65rem;
+      border-top: 0.5px solid rgba(0,0,0,0.1);
+    }
+
+    .text-input-label {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #aaa;
+      white-space: nowrap;
+    }
+
+    .text-input-field {
+      flex: 1;
+      font-family: 'tempu', serif;
+      /* 16px prevents iOS auto-zoom on focus */
+      font-size: 16px;
+      padding: 6px 10px;
+      border: 0.5px solid rgba(0,0,0,0.15);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.6);
+      color: #111;
+      outline: none;
+      transition: font-variation-settings 0.8s ease, border-color 0.2s;
+    }
+    .text-input-field:focus { border-color: rgba(0,0,0,0.35); }
+
+    .custom-wrap {
+      width: 100%;
+      overflow: hidden;
+      line-height: 1;
+      min-height: 1rem;
+      margin-top: 0.4rem;
+    }
+
+    .custom-display {
+      font-family: 'tempu', serif;
+      white-space: nowrap;
+      display: block;
+      line-height: 1.1;
+      color: #111;
+      letter-spacing: -0.02em;
+      transition: font-variation-settings 0.8s ease;
+    }
   </style>
 </head>
 <body>
@@ -280,8 +264,8 @@
       <div class="temp-dot" id="temp-dot"></div>
       <span id="location-label">—</span>
     </div>
-    <span class="temp-display" id="meta-temp">—</span>
-   Current <span>wght <span id="wght-value">—</span></span>
+    <span class="temp-display" id="slider-temp-display">—</span>
+    <span style="font-size:12px;color:#aaa;">wght <span id="wght-value">—</span></span>
   </div>
 
   <div class="headline-wrap" id="headline-wrap">
@@ -296,15 +280,33 @@
       ◎ Use my location
     </button>
 
-    <div class="slider-row">
-      <span class="slider-label">Manual temperature</span>
-      <input type="range" id="temp-slider" min="0" max="40" step="1" value="12">
-      <span class="temp-display" id="slider-temp-display">12°C</span>
+    <div class="axis-track">
+      <div class="axis-fill" id="axis-fill"></div>
+      <div class="axis-thumb" id="axis-thumb"></div>
     </div>
-<br>
-    <p class="desc">Outside, the air sits at <strong id="temp-inline">12°C</strong>. That temperature is mapped directly to this font's weight axis — cold air makes letters lean thin, warmth rounds them into weight.</p>
 
-   
+    <div class="slider-row">
+      <span class="slider-label">Override</span>
+      <input type="range" id="temp-slider" min="0" max="40" step="1" value="12">
+      <span class="temp-display" id="slider-temp-display2">12°C</span>
+    </div>
+
+    <p class="desc">Outside, the air sits at <strong id="temp-inline">—</strong>. That temperature is mapped directly to this font's weight axis — cold air makes letters lean thin, warmth rounds them into weight.</p>
+
+    <div class="text-input-row">
+      <span class="text-input-label">Your text</span>
+      <input
+        class="text-input-field"
+        id="custom-input"
+        type="text"
+        placeholder="Type something…"
+        maxlength="80"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      />
+    </div>
 
     <div class="custom-wrap" id="custom-wrap">
       <span class="custom-display" id="custom-display" style="opacity:0; font-size:1rem;"></span>
@@ -347,12 +349,12 @@
       currentWeight = wght;
       const fvs = `'wght' ${wght}`;
 
-      document.getElementById('temp-dot').style.background       = color;
-      document.getElementById('wght-value').textContent          = wght;
-      document.getElementById('meta-temp').textContent           = t.toFixed(1) + '°C';
-      document.getElementById('slider-temp-display').textContent = t.toFixed(1) + '°C';
-      document.getElementById('temp-inline').textContent         = t.toFixed(1) + '°C';
-      document.getElementById('temp-slider').value               = Math.round(t);
+      document.getElementById('temp-dot').style.background        = color;
+      document.getElementById('wght-value').textContent           = wght;
+      document.getElementById('slider-temp-display').textContent  = t.toFixed(1) + '°C';
+      document.getElementById('slider-temp-display2').textContent = t.toFixed(1) + '°C';
+      document.getElementById('temp-inline').textContent          = t.toFixed(1) + '°C';
+      document.getElementById('temp-slider').value                = Math.round(t);
       document.getElementById('custom-input').style.fontVariationSettings = fvs;
 
       fitEl('headline-wrap', 'headline', wght);
@@ -396,18 +398,18 @@
       btn.textContent = '◎ Locating…';
 
       if (!navigator.geolocation) {
-        setStatus('Geolocation not supported by this browser.');
+        setStatus('Geolocation not supported — use the slider.');
         btn.disabled = false;
         btn.textContent = '◎ Use my location';
         return;
       }
 
-      setStatus('Waiting for location permission…');
+      setStatus('Waiting for permission…');
 
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           const { latitude: lat, longitude: lon } = pos.coords;
-          setStatus('Got location. Fetching temperature…');
+          setStatus('Fetching temperature…');
           try {
             const [temp, place] = await Promise.all([
               fetchWeather(lat, lon),
@@ -418,18 +420,18 @@
             btn.textContent = '◎ ' + place;
             applyTemp(temp);
           } catch (e) {
-            setStatus('Could not fetch weather. Try the slider.');
+            setStatus('Weather fetch failed — use the slider.');
             btn.disabled = false;
             btn.textContent = '◎ Try again';
           }
         },
         (err) => {
           const msgs = {
-            1: 'Location permission denied. Allow it in your browser settings and try again.',
-            2: 'Location unavailable. Try the slider.',
-            3: 'Location request timed out. Try again.',
+            1: 'Permission denied — allow location in Settings and try again.',
+            2: 'Location unavailable — use the slider.',
+            3: 'Request timed out — try again.',
           };
-          setStatus(msgs[err.code] || 'Location error. Try the slider.');
+          setStatus(msgs[err.code] || 'Location error — use the slider.');
           btn.disabled = false;
           btn.textContent = '◎ Try again';
         },
@@ -455,10 +457,17 @@
       }
     });
 
+    /* re-fit on resize + iOS keyboard show/hide via visualViewport */
     const ro = new ResizeObserver(() => {
       applyTemp(parseFloat(document.getElementById('temp-slider').value));
     });
     ro.observe(document.getElementById('headline-wrap'));
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => {
+        applyTemp(parseFloat(document.getElementById('temp-slider').value));
+      });
+    }
 
     document.fonts.ready.then(() => applyTemp(12));
   </script>

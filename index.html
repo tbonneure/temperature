@@ -20,6 +20,8 @@
       overflow: hidden;
     }
 
+    .none { display: none; }
+
     .meta {
       font-size: 13px;
       position: fixed;
@@ -253,45 +255,6 @@
       letter-spacing: -0.02em;
       transition: font-variation-settings 0.8s ease;
     }
-
-
- @media only screen and (max-width: 600px) {
-    .headline {
-    font-size: calc(100vw / .7) !important;
-  
-  }
-  .axis-bar {
-    position: fixed;
-    width: calc(100% - 20px);
-    bottom: 10px;
-    left: 10px;
-    background-color: rgb(233, 233, 233);
-    padding: 1.25rem 1.5rem;
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    z-index: 10;
-  }
-
-  .headline-wrap {
-    width: 100vw;
-    height: 80vh;
-    left: 0px;
-    top: 0px;
-    overflow: hidden;
-    line-height: 1;
-    margin-bottom: 1.5rem;
-    
-    background-color: #04AA6D;
-    display: flex;
-    z-index: -9;
-    position: fixed;
-    justify-content: center;
-    align-items: center;
-  }
-
-
-}
-    
   </style>
 </head>
 <body>
@@ -328,11 +291,12 @@
       <span class="temp-display" id="slider-temp-display2">12°C</span>
     </div>
 
+    <p class="desc">Outside, the air sits at <strong id="temp-inline">—</strong>. That temperature is mapped directly to this font's weight axis — cold air makes letters lean thin, warmth rounds them into weight.</p>
 
-    <div class="text-input-row ">
-      <span class="text-input-label ">Your text</span>
+    <div class="text-input-row">
+      <span class="text-input-label">Your text</span>
       <input
-        class="text-input-field "
+        class="text-input-field"
         id="custom-input"
         type="text"
         placeholder="Type something…"

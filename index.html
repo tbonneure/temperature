@@ -81,7 +81,7 @@
       width: 100vw;
       font-size:75vw;
       transform: translateY(30px);
-      color:pink;
+      color:orange;
       letter-spacing: -0.02em;
       transition: font-variation-settings 0.8s ease;
     }
@@ -379,7 +379,7 @@
       const wrap = document.getElementById(wrapId);
       const el   = document.getElementById(elId);
       el.style.fontVariationSettings = `'wght' ${wght}`;
-      el.style.fontSize = '600px';
+      el.style.fontSize = '300px';
       const availW = wrap.clientWidth;
       if (!availW || !el.textContent.trim()) return;
       el.style.fontSize = Math.floor(100 * (availW / el.scrollWidth)) + 'px';

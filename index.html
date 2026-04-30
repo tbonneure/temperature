@@ -216,7 +216,7 @@
        doesn't fully overlap the text. No z-index:-9, no !important. */
     @media only screen and (max-width: 600px) {
       .headline-wrap {
-        height: 55dvh; /* leave room for panel below */
+        height: 100dvh;
         top: 0;
         align-items: center;
       }
@@ -304,7 +304,8 @@
       const el   = document.getElementById(elId);
       if (!wrap || !el || !el.textContent.trim()) return;
 
-      const availW = wrap.clientWidth;
+      const isMobile = window.innerWidth <= 600;
+      const availW = isMobile ? window.innerWidth * 0.75 : wrap.clientWidth;
       const availH = wrap.clientHeight;
       if (!availW || !availH) return;
 

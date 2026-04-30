@@ -379,7 +379,7 @@
       const wrap = document.getElementById(wrapId);
       const el   = document.getElementById(elId);
       el.style.fontVariationSettings = `'wght' ${wght}`;
-      el.style.fontSize = '300px';
+      el.style.fontSize = '600px';
       const availW = wrap.clientWidth;
       if (!availW || !el.textContent.trim()) return;
       el.style.fontSize = Math.floor(100 * (availW / el.scrollWidth)) + 'px';

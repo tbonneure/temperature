@@ -15,7 +15,7 @@
 
     html, body {
       height: 100%;
-      font-family: times;
+      font-family: helvetica;
       -webkit-font-smoothing: antialiased;
       overflow: hidden;
       background-color: white !important;
@@ -73,7 +73,7 @@
       line-height: 1;
       text-align: center;
       /* NO font-size or !important here — JS owns it entirely */
-      color: green;
+      color: lavender;
       letter-spacing: -0.02em;
       transition: font-variation-settings 0.8s ease;
     }
@@ -241,7 +241,7 @@
   </div>
 
   <div class="headline-wrap" id="headline-wrap">
-    <span class="headline" id="headline">aS</span>
+    <span class="headline" id="headline">Sa</span>
   </div>
 
   <div class="axis-bar">
@@ -254,7 +254,7 @@
 
     <div class="slider-row">
       <span class="slider-label">Override</span>
-      <input type="range" id="temp-slider" min="0" max="50" step="1" value="12">
+      <input type="range" id="temp-slider" min="0" max="30" step="1" value="12">
       <span class="temp-display" id="slider-temp-display2">12°C</span>
     </div>
 
@@ -281,8 +281,8 @@
   </div>
 
   <script>
-    const TEMP_MIN = 0, TEMP_MAX = 50;
-    const WGHT_MIN = 200, WGHT_MAX = 900;
+    const TEMP_MIN = 0, TEMP_MAX = 30;
+    const WGHT_MIN = 700, WGHT_MAX = 200;
     const COLORS = { cold:'#85B7EB', cool:'#378ADD', mild:'#1D9E75', warm:'#EF9F27', hot:'#D85A30' };
 
     let currentWeight = 300;

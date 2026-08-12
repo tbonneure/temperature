@@ -22,7 +22,7 @@
      
     }
 
-    .meta {
+    /* .meta {
       font-size: 13px;
       position: fixed;
       top: max(1rem, env(safe-area-inset-top));
@@ -31,7 +31,25 @@
       gap: 1rem;
       align-items: center;
       z-index: 10;
+    } */
+
+    .meta {
+      font-size: 13px;
+      position: fixed;
+      top: max(1rem, env(safe-area-inset-top));
+      left: 1rem;
+      display: flex;
+      justify-content: center;
+      height: 100vh;
+      width: 100%;
+      transform: scale(3) translateY(-10px);
+      gap: 1rem;
+      align-items: center;
+      z-index: 10;
+      pointer-events: none;
+
     }
+
 
     .weather-pill {
       display: inline-flex;
@@ -40,8 +58,8 @@
       padding: 4px 10px;
       border-radius: 99px;
       font-size: 12px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      /* backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px); */
     }
 
     .temp-dot {
@@ -68,14 +86,31 @@
 
     .headline {
       font-family: 'tempu', serif;
-      white-space: nowrap;
+      white-space: pre-wrap;
       display: block;
-      line-height: 1;
+      line-height: .5;
       text-align: center;
-      /* NO font-size or !important here — JS owns it entirely */
+      /* JS owns font-size entirely */
       color: lightgray;
-      letter-spacing: -0.02em;
+      letter-spacing: 1;
       transition: font-variation-settings 0.8s ease;
+      pointer-events: auto;
+      cursor: text;
+      outline: none;
+      max-width: 100%;
+      user-select: text;
+      -webkit-user-select: text;
+      caret-color: #333;
+    }
+
+    .headline:focus {
+      outline: none;
+    }
+
+    .headline:empty::before {
+      content: 'Type here';
+      color: rgba(0,0,0,0.16);
+      pointer-events: none;
     }
 
     .axis-bar {
@@ -102,6 +137,7 @@
       min-height: 15px;
       margin-bottom: 0.6rem;
       line-height: 1.4;
+      display: none;
     }
 
     .locate-btn {
@@ -125,18 +161,19 @@
       -webkit-appearance: none;
       appearance: none;
       flex: 1;
-      height: 3px;
-      background: #d3d3d3;
+      height: 1px;
+      background: black;
       outline: none;
       border-radius: 2px;
-      opacity: 0.7;
+      
     }
     #temp-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 24px; height: 24px;
+      width: 20px; height: 20px;
       border-radius: 50%;
-      background: #333;
+      background: black;
+      outline: 1px solid white;
       cursor: pointer;
     }
     #temp-slider::-moz-range-thumb {
@@ -151,9 +188,21 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding-top: 0.85rem;
-      border-top: 0.5px solid rgba(0,0,0,0.1);
+      /* padding-top: 0.85rem; */
+      /* border-top: 0.5px solid rgba(0,0,0,0.1); */
     }
+
+
+    .slider {
+  
+  width: 100%;
+  height: 3px;
+  background: black;
+  opacity: 0.8;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
 
     .slider-label { font-size: 12px; color: #000; white-space: nowrap; }
     .temp-display { font-size: 14px; font-weight: 500; color: #000; min-width: 46px; text-align: right; }
@@ -163,6 +212,7 @@
       font-size: 12px;
       color: #000;
       line-height: 1.5;
+      display: none;
     }
 
     .text-input-row {
@@ -198,7 +248,7 @@
     .custom-wrap {
       width: 100%;
       overflow: hidden;
-      line-height: 1;
+      line-height: .8;
       min-height: 1rem;
       margin-top: 0.4rem;
     }
@@ -207,7 +257,7 @@
       font-family: 'tempu', serif;
       white-space: nowrap;
       display: block;
-      line-height: 1.1;
+      line-height: .8;
       color: #000;
       letter-spacing: -0.02em;
       transition: font-variation-settings 0.8s ease;
@@ -241,11 +291,21 @@
   </div>
 
   <div class="headline-wrap" id="headline-wrap">
-    <span class="headline" id="headline">Gacet</span>
+    <span
+      class="headline"
+      style="line-height:.5 !important"
+      id="headline"
+      contenteditable="true"
+      role="textbox"
+      aria-label="Editable headline"
+      aria-multiline="true"
+      spellcheck="false"
+      autocapitalize="off"
+    >Sa</span>
   </div>
 
   <div class="axis-bar">
-    <div class="axis-label">Temperature OTF</div>
+    <!-- <div class="axis-label">Temperature OTF</div> -->
     <div class="status-msg" id="status-msg"></div>
 
     <button class="locate-btn" id="locate-btn" onclick="requestLocation()">
@@ -303,35 +363,62 @@
     function fitEl(wrapId, elId, wght) {
       const wrap = document.getElementById(wrapId);
       const el   = document.getElementById(elId);
-      if (!wrap || !el || !el.textContent.trim()) return;
+      if (!wrap || !el) return;
 
-      const isMobile = window.innerWidth <= 600;
-      const availW = isMobile ? window.innerWidth * 0.90 : wrap.clientWidth;
-      const availH = wrap.clientHeight;
-      if (!availW || !availH) return;
+      const textValue = el.textContent.replace(/\u00a0/g, ' ').trim();
 
-      el.style.fontVariationSettings = `'wght' ${wght}`;
-
-      function measure(size) {
-        el.style.fontSize = size + 'px';
-        const r = el.getBoundingClientRect();
-        return { w: r.width, h: r.height };
+      // Keep a sensible editable size when empty.
+      if (!textValue) {
+        el.style.fontVariationSettings = `'wght' ${wght}`;
+        el.style.fontSize = '48px';
+        return;
       }
 
-      function fits(m) { return m.w <= availW && m.h <= availH; }
+      const isMobile = window.innerWidth <= 600;
 
-      // Coarse pass: find an upper bound that fits
-      let hi = Math.max(availW, availH) * 2;
-      while (!fits(measure(hi)) && hi > 1) hi = Math.floor(hi / 2);
+      // Leave a little breathing room on both sides.
+      const isSingleCharacter = [...textValue].length === 1 && !el.innerText.includes('\n');
 
-      // Fine binary search between hi and hi*2
-      let lo = hi;
-      hi = lo * 2;
-      measure(hi); // ensure hi is set
-      for (let i = 0; i < 24; i++) {
-        const mid = Math.floor((lo + hi) / 2);
-        if (fits(measure(mid))) lo = mid; else hi = mid - 1;
-        if (lo >= hi) break;
+      // A single glyph can use almost the entire canvas.
+      // Longer headlines keep a little more breathing room.
+      const widthFactor = isSingleCharacter ? 0.99 : (isMobile ? 0.92 : 0.96);
+      const heightFactor = isSingleCharacter ? 0.99 : 0.92;
+
+      const availW = Math.max(
+        1,
+        Math.min(
+          wrap.clientWidth,
+          window.innerWidth * widthFactor
+        )
+      );
+      const availH = Math.max(1, wrap.clientHeight * heightFactor);
+
+      el.style.fontVariationSettings = `'wght' ${wght}`;
+      el.style.lineHeight = isSingleCharacter ? '0.82' : '1';
+
+      // Binary-search the largest size that fits both width and height.
+      let lo = 1;
+      let hi = Math.max(16, Math.ceil(Math.max(availW, availH) * 2));
+
+      function fits(size) {
+        el.style.fontSize = size + 'px';
+        const rect = el.getBoundingClientRect();
+        return rect.width <= availW && rect.height <= availH;
+      }
+
+      // If our upper bound still fits, grow it until it doesn't.
+      while (fits(hi) && hi < 4096) {
+        lo = hi;
+        hi *= 2;
+      }
+
+      while (lo < hi) {
+        const mid = Math.ceil((lo + hi) / 2);
+        if (fits(mid)) {
+          lo = mid;
+        } else {
+          hi = mid - 1;
+        }
       }
 
       el.style.fontSize = lo + 'px';
@@ -449,6 +536,59 @@
         el.style.opacity  = '0';
         el.style.fontSize = '1rem';
       }
+    });
+
+    const headline = document.getElementById('headline');
+
+    // Re-fit continuously while typing, including multiple lines.
+    headline.addEventListener('input', () => {
+      fitEl('headline-wrap', 'headline', currentWeight);
+    });
+
+    // Enter is intentionally allowed so the user can create line breaks.
+    headline.addEventListener('keydown', (e) => {
+      // Keep normal Enter behavior in the contenteditable headline.
+    });
+
+    // Paste as plain text while preserving line breaks.
+    headline.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData)
+        .getData('text')
+        .replace(/\r\n?/g, '\n');
+
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
+
+      selection.deleteFromDocument();
+      const range = selection.getRangeAt(0);
+      const frag = document.createDocumentFragment();
+      const lines = pasted.split('\n');
+      let lastNode = null;
+
+      lines.forEach((line, i) => {
+        if (i > 0) {
+          const br = document.createElement('br');
+          frag.appendChild(br);
+          lastNode = br;
+        }
+        if (line) {
+          const node = document.createTextNode(line);
+          frag.appendChild(node);
+          lastNode = node;
+        }
+      });
+
+      range.insertNode(frag);
+
+      if (lastNode) {
+        range.setStartAfter(lastNode);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+
+      fitEl('headline-wrap', 'headline', currentWeight);
     });
 
     const ro = new ResizeObserver(() => {
